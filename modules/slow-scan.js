@@ -5,15 +5,19 @@ import async from 'async'
 import sanitizeHtml from 'sanitize-html'
 import firefox from 'selenium-webdriver/firefox.js'
 import {Builder,By} from 'selenium-webdriver'
-import path from 'path'
 import engine from './engine.js'
-import {createRequire} from 'node:module';
+import {download as download_geckodriver} from 'geckodriver'
 
-const require = createRequire(import.meta.url);
+let geckodriver_path
 
-if (process.platform === 'win32') {
-  const package_path = path.join(path.dirname(require.resolve('geckodriver')), '..')
-  process.env.PATH = process.env.PATH + ';' + package_path
+async function get_geckodriver_path () {
+  if (!geckodriver_path) {
+    geckodriver_path = download_geckodriver().catch((error) => {
+      geckodriver_path = undefined
+      throw error
+    })
+  }
+  return geckodriver_path
 }
 
 async function find_username_advanced (req) {
@@ -44,12 +48,21 @@ async function find_username_site (uuid, username, options, site) {
       helper.log_to_file_queue(uuid, '[Checking] ' + helper.get_site_from_url(site.url))
       let driver
       if (helper.grid_url === '') {
+        let driver_path
+        try {
+          driver_path = await get_geckodriver_path()
+        } catch (err) {
+          helper.verbose && console.log('Geckodriver Download Issue')
+          resolve(undefined)
+          return
+        }
         driver = new Builder()
           .forBrowser('firefox')
           .setFirefoxOptions(new firefox.Options().headless().windowSize({
             width: 640,
             height: 480
           }))
+          .setFirefoxService(new firefox.ServiceBuilder(driver_path))
           .build()
       } else {
         driver = new Builder()

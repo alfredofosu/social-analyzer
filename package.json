@@ -19,7 +19,7 @@
     "express-async-errors": "3.1.1",
     "follow-redirects": "^1.15.1",
     "franc": "^6.0.0",
-    "geckodriver": "^3.0.1",
+    "geckodriver": "^7.0.0",
     "generatorics": "1.1.0",
     "html-to-text": "8.2.0",
     "https-proxy-agent": "5.0.1",
@@ -32,13 +32,16 @@
     "pretty-error": "4.0.0",
     "sanitize-html": ">=2.7.0",
     "selenium-webdriver": "4.3.0",
-    "semver": "7.3.7",
+    "semver": "7.8.5",
     "slash": "4.0.0",
     "string-similarity": "4.0.4",
     "tesseract.js": "2.1.5",
     "wink-tokenizer": "5.3.0",
     "wordsninja": "1.0.0",
     "yargs": "17.5.1"
+  },
+  "overrides": {
+    "ejs": "^3.1.10"
   },
   "author": "QeeqBox",
   "license": "AGPL-3.0",
